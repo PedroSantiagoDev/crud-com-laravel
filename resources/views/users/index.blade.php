@@ -13,8 +13,6 @@
                 {{ $user->name }} |
                 <a href="{{ route("users.edit", $user) }}" class="uppercase text-blue-400">Edit</a>
                 |
-                <a href="{{ route("users.destroy", $user) }}" class="uppercase text-red-400">Delete</a>
-                |
                 <a href="{{ route("users.show", $user) }}" class="uppercase text-stone-400">Show</a>
             </li>
         @endforeach
