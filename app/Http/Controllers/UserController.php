@@ -22,7 +22,7 @@ class UserController extends Controller
     public function index(): View
     {
         return view('users.index', [
-            'users' => $this->user->query()->paginate(15),
+            'users' => $this->user->query()->latest()->paginate(15),
         ]);
     }
 
@@ -37,17 +37,27 @@ class UserController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
-        //
+        $validated = $request->validate([
+            'name' => 'required|max:255',
+            'email' => 'required|email',
+            'password' => 'required',
+        ]);
+
+        User::create($validated);
+
+        return redirect(route('users.index'))->with('message', 'Created User');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(User $user): View
     {
-        //
+        return view('users.show', [
+            'user' => $user,
+        ]);
     }
 
     /**
@@ -78,8 +88,10 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(User $user): RedirectResponse
     {
-        //
+        $user->delete();
+
+        return redirect(route('users.index'))->with('message', 'Delete user');
     }
 }
